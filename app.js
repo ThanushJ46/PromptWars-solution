@@ -2,9 +2,9 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then(reg => {
-            console.log('ServiceWorker registered:', reg.scope);
+            // registered successfully 
         }).catch(err => {
-            console.log('ServiceWorker registration failed:', err);
+            // registration failed silently
         });
     });
 }
@@ -153,7 +153,7 @@ function triggerStampedeProtocol() {
                 });
             }
         } catch (e) {
-            console.error("Notification failed:", e);
+            // fallback notification failed
         }
     }
 
@@ -251,11 +251,12 @@ function submitReport() {
     const alertBox = document.getElementById('mgmt-alerts');
     alertBox.classList.remove('hidden');
     
+    const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     alertBox.innerHTML = `
         <div class="report-banner anim-fade-in">
             <div>
                 <strong style="font-size:1.1rem;"><i class="fa-solid fa-bullhorn"></i> FAN REPORT</strong><br>
-                ${text}
+                ${safeText}
             </div>
             <button class="btn btn-outline" style="width: auto; color: black; border-color: black;" onclick="this.parentElement.remove()">Acknowledge</button>
         </div>
