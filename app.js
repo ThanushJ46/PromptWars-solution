@@ -219,7 +219,7 @@ function closeFanAlert() {
             <div class="report-banner anim-fade-in" style="background: rgba(245, 158, 11, 0.9); margin-bottom: 1.5rem;">
                 <div>
                     <strong style="color: #000; font-size: 1.1rem;"><i class="fa-solid fa-circle-info"></i> Guided Exit Active</strong><br>
-                    <span style="color: #000; font-size: 0.9rem;">${currentFanAlert}</span>
+                    <span style="color: #000; font-size: 0.9rem;">${currentFanAlert.replace('color:var(--warning)', 'color:#000; text-decoration:underline; font-weight:800; font-size:1rem;')}</span>
                 </div>
                 <button class="btn btn-outline" style="width: auto; color: black; border-color: black; margin-left: 15px;" onclick="openFanAlert()">View</button>
             </div>
