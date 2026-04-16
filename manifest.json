@@ -1,0 +1,16 @@
+{
+  "name": "StadiSync Arena App",
+  "short_name": "StadiSync",
+  "description": "Smart Arena Management and Fan Experience",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StadiSync - Smart Arena</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Panzoom for Interactive Map -->
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-stadium"></i> StadiSync</div>
+        <div class="role-toggle">
+            <span id="fan-btn" class="active" onclick="switchRole('fan')">Fan App</span>
+            <span id="mgmt-btn" onclick="switchRole('management')">Management</span>
+        </div>
+    </header>
+
+    <div class="view-container">
+        <!-- FAN VIEW -->
+        <main id="fan-view" class="view-active">
+            <section class="hero-card">
+                <h2>Welcome to Section 104</h2>
+                <p>Next Event: Halftime Show in 15 mins</p>
+            </section>
+
+            <!-- Persistent Fan Alerts -->
+            <section id="fan-active-alerts" class="hidden"></section>
+
+            <section class="widgets">
+                <div class="widget">
+                    <i class="fa-solid fa-map-location-dot accent-icon"></i>
+                    <h3>StadiMap</h3>
+                    <p>Interactive Map</p>
+                    <button class="btn btn-outline" onclick="openMap()">View Map</button>
+                </div>
+
+                <div class="widget">
+                    <i class="fa-solid fa-triangle-exclamation accent-icon" style="color: var(--warning)"></i>
+                    <h3>Report Issue</h3>
+                    <p>Alert facility.</p>
+                    <button class="btn btn-outline" onclick="openReport()">Report</button>
+                </div>
+
+                <div class="widget emergency-widget">
+                    <i class="fa-solid fa-truck-medical"></i>
+                    <h3>First Aid</h3>
+                    <p>Immediate help.</p>
+                    <button class="btn btn-danger" onclick="triggerSOS()">SOS Alert</button>
+                </div>
+            </section>
+
+            <section class="live-status">
+                <h3><i class="fa-solid fa-camera"></i> Live Crowd AI</h3>
+                <div class="status-list" id="fan-status-list"></div>
+            </section>
+            
+            <!-- Important Alert overlay -->
+            <div id="fan-alert-modal" class="modal hidden">
+                <div class="modal-content safe-glow" style="position: relative;">
+                    <h1 class="safe-title"><i class="fa-solid fa-circle-info"></i> Guided Exit</h1>
+                    <p id="fan-alert-text">Please remain calm and follow your designated exit.</p>
+                    
+                    <!-- Wayfinder Compass UI -->
+                    <div id="wayfinder-compass" class="compass-wrapper hidden">
+                        <div class="compass-circle">
+                            <div class="compass-arrow"><i class="fa-solid fa-location-arrow"></i></div>
+                        </div>
+                        <p class="compass-text">Follow this direction</p>
+                    </div>
+                    
+                    <button class="btn btn-outline" style="margin-top: 1.5rem; color: var(--warning); border-color: var(--warning);" onclick="closeFanAlert()">Acknowledge & Continue</button>
+                </div>
+            </div>
+
+            <!-- Fan Reporting Modal -->
+            <div id="report-modal" class="modal hidden">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button>
+                    <h2 style="margin-bottom: 1rem; color: var(--text-main);"><i class="fa-solid fa-bullhorn" style="color:var(--warning)"></i> Report Issue</h2>
+                    <textarea id="report-text" rows="4" placeholder="Describe the issue (e.g., Spill near Gate G8, Washroom empty)" style="width:100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--border-light); margin-bottom: 15px; font-family: inherit; resize: none;"></textarea>
+                    <button class="btn btn-outline" onclick="submitReport()">Submit Report</button>
+                </div>
+            </div>
+
+            <!-- Offline Map Modal -->
+            <div id="map-modal" class="modal hidden">
+                <div class="modal-content large-modal" style="padding: 1rem; overflow: hidden; display: flex; flex-direction: column;">
+                    <button class="close-btn" style="z-index: 10;" onclick="closeMap()"><i class="fa-solid fa-xmark"></i></button>
+                    <h2 style="margin-bottom: 1rem; color: var(--accent-blue);"><i class="fa-solid fa-map-location-dot"></i> Venue Map</h2>
+                    <div id="panzoom-container" style="flex: 1; overflow: hidden; border-radius: 12px; border: 1px solid var(--border-light); touch-action: none; background: #000; display: flex; align-items: center; justify-content: center;">
+                        <img src="map.png" alt="Offline Stadium Map" id="panzoom-img" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Pinch to zoom, drag to pan</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- MANAGEMENT VIEW -->
+        <main id="mgmt-view" class="view-hidden">
+            <section class="hero-card mgmt-card">
+                <h2>Command Dashboard</h2>
+                <p>System Status: Active | AI Nodes: 24 Online</p>
+            </section>
+
+            <!-- Dynamic SOS and Reports Alerts will appear here -->
+            <section id="mgmt-alerts" class="hidden"></section>
+
+            <section class="admin-grid">
+                <div class="admin-panel">
+                    <h3><i class="fa-solid fa-eye"></i> YOLO CCTV Feeds</h3>
+                    <div class="feed-grid" id="mgmt-feed-grid"></div>
+                </div>
+
+                <div class="admin-panel action-panel">
+                    <h3><i class="fa-solid fa-tower-broadcast"></i> Action Center</h3>
+                    <div class="action-item">
+                        <h4>Stampede Prevention Alert</h4>
+                        <p>Trigger mass haptic feedback & stagger exit instructions to all fans.</p>
+                        <button class="btn btn-danger btn-full" onclick="triggerStampedeProtocol()">TRIGGER ALERT PROTOCOL</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js?v=2"></script>
+</body>
+</html>
