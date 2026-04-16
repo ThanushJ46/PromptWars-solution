@@ -29,3 +29,21 @@ StadiSync functions through a seamless integration between a dual-role frontend 
 - **Smartphone Adoption:** We assume a supermajority of attendees possess a smartphone capable of rendering modern HTML5 web browsers to load the PWA.
 - **Network Saturation:** We base our architecture on the assumption that commercial 4G/5G networks *will* heavily degrade during peak occupancy, which is why the StadiSync app requires zero active data streaming to render its interactive 3D map once cached.
 - **Hardware Capacity:** AI visual processing (YOLO inference) is assumed to be run locally on Edge Devices (like NVIDIA Jetson Nanos) connected to the local intranet to prevent latency, rather than relying on expensive, slow cloud-video-streaming computations.
+
+## 5. Installation & Requirements
+**Frontend (Browser PWA):**
+No setup required. The fan application is deployed externally on Google Cloud Run and can be accessed directly via URL, relying entirely on native browser features configured purely in Vanilla HTML/CSS/JS.
+
+**Backend (YOLOv8 AI Computer Vision):**
+To maintain an extremely small and efficient repository size (under 1MB), the heavy AI models and test videos are actively excluded from GitHub storage constraints. They are designed to auto-download dynamically.
+
+1. Ensure you have Python 3.9+ installed.
+2. Install the required deep-learning and visual processing dependencies:
+   ```bash
+   pip install ultralytics opencv-python
+   ```
+3. Execute the security camera simulation. When run for the very first time, the `ultralytics` library will intercept the call and automatically fetch the required `yolov8n.pt` neural network weights direct from the cloud!
+   ```bash
+   python detector.py
+   ```
+*(Note: For demonstration purposes, if `crowd.avi` is missing, you can replace the source path in `detector.py` to point to `0` for your local webcam, or drag-and-drop any sample crowd video MP4/AVI into the directory).* 
