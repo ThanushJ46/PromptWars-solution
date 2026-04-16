@@ -22,6 +22,12 @@ let locations = [
     { id: 'wash-pav', name: 'Washroom (Pavilion Terrace)', capacity: 40, currentPeople: 38 }
 ];
 
+/**
+ * Calculates the congestion status label based on current occupancy vs capacity.
+ * @param {number} current - The current number of people.
+ * @param {number} max - The maximum capacity of the area.
+ * @returns {Object} The status object containing text and CSS class.
+ */
 function getStatus(current, max) {
     const ratio = current / max;
     if (ratio >= 0.85) return { text: 'FULL', class: 'red' };
@@ -29,6 +35,10 @@ function getStatus(current, max) {
     return { text: 'AVAILABLE', class: 'green' };
 }
 
+/**
+ * Renders the latest JSON location data directly into the DOM.
+ * Automatically updates both the Fan View and Management View feeds.
+ */
 function renderData() {
     const fanList = document.getElementById('fan-status-list');
     const mgmtGrid = document.getElementById('mgmt-feed-grid');
@@ -80,6 +90,10 @@ setInterval(() => {
 renderData();
 
 // View Toggling logic with Fade Animations
+/**
+ * Toggles the main UI view between the Fan dashboard and Management dashboard.
+ * @param {string} role - The target role view ('fan' or 'management').
+ */
 function switchRole(role) {
     const fanView = document.getElementById('fan-view');
     const mgmtView = document.getElementById('mgmt-view');
@@ -109,6 +123,10 @@ function switchRole(role) {
 }
 
 // SOS Logic
+/**
+ * Triggers a simulated SOS beacon from a fan's location.
+ * Broadcasts the alert to the central management dashboard.
+ */
 function triggerSOS() {
     alert("SOS Beacon Activated! Switching to Management View to show exactly what security sees.");
     const userSeat = "A STAND, Row 12, Seat 45";
@@ -132,6 +150,10 @@ let currentFanAlert = "";
 let fanAlertTimeout;
 
 // Stampede Prevention / Mass Haptic Logic / Push Notifications / Wayfinding
+/**
+ * Initiates the Stampede Prevention Protocol.
+ * Dispatches mass haptic feedback, native push notifications, and visual wayfinding.
+ */
 function triggerStampedeProtocol() {
     alert("Alert Dispatched to all Fan Apps!");
     
